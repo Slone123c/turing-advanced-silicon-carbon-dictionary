@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "agentStop": [
+      {
+        "type": "command",
+        "command": "python3 /path/to/turing-advanced-silicon-carbon-dictionary/scan.py --hook copilot",
+        "timeoutSec": 10
+      }
+    ]
+  }
+}

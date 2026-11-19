@@ -1,0 +1,224 @@
+# 测试用例：python3 scan.py --test
+# 脚本只做字面匹配 + 按等级分流，语义判断交给 AI，所以这里只测确定性的部分。
+# expect: 词条 → 期望状态（Review / Ignored）；{} 表示不应命中
+# decision: 整条回复的期望判定（Pass / Review / Confirmed），round 默认 0
+# reviewed + resolved: AI 处理完之后，被审查的词是 fixed 还是 kept
+
+- name: 高风险词 → 送审
+  text: 这个功能已经落地了。
+  expect: {落地: Review}
+  decision: Review
+
+- name: 中风险词 → 送审（由 AI 判断）
+  text: 问题已经闭环。
+  expect: {闭环: Review}
+  decision: Review
+
+- name: 直角引号里的词直接放行（引用/讨论用词本身）
+  text: 文档里写的「落地」指的是上线。
+  expect: {}
+  decision: Pass
+
+- name: 引号里的整句引用不送审
+  text: 删除了 OMP/Codex 强制「安装已经落地」、Cursor 那句「落地/对齐/闭环/赋能」测试。
+  expect: {}
+  decision: Pass
+
+- name: 引号外仍送审
+  text: 「闭环」可以保留，但落地必须改掉。
+  expect: {落地: Review}
+  decision: Review
+
+- name: 看语境的词送审
+  text: 下一步推进接口开发。
+  expect: {推进: Review}
+  decision: Review
+
+- name: 补充说明级的术语也送审（由 AI 判断要不要解释）
+  text: 下游处理不过来时触发背压，让上游减慢发送。
+  expect: {背压: Review}
+  decision: Review
+
+- name: 项目术语表里的词放行
+  text: 按契约生成客户端代码。
+  glossary: [契约]
+  expect: {契约: Ignored}
+  decision: Pass
+
+- name: 行内代码不检测
+  text: 搜索 `落地` 出现的位置。
+  expect: {}
+  decision: Pass
+
+- name: 代码块不检测
+  text: "示例：\n```\n落地闭环\n```\n已修好登录接口。"
+  expect: {}
+  decision: Pass
+
+- name: 链接不检测
+  text: 见 https://example.com/luodi/落地
+  expect: {}
+
+- name: 长词优先，不拆开
+  text: 和后端对齐口径。
+  expect: {对齐口径: Review}
+
+- name: 英文整词匹配，不误伤
+  lang: en
+  text: The leverage ratio is high; we leverage caching.
+  expect: {leverage: Review}
+
+- name: AI 处理过的那一轮直接放行
+  text: 这个功能已经落地了。
+  round: 1
+  decision: Confirmed
+
+- name: AI 改掉了 → fixed
+  text: 登录接口已上线，回归测试通过。
+  reviewed: [落地, 闭环]
+  resolved: {落地: fixed, 闭环: fixed}
+
+- name: AI 改了一部分 → 分别记录
+  text: 登录接口已上线，问题已经闭环（报错 → 修复 → 回归）。
+  reviewed: [落地, 闭环]
+  resolved: {落地: fixed, 闭环: kept}
+
+- name: AI 确认全部保留 → kept
+  text: 【措辞已确认，保留原文】
+  reviewed: [落地]
+  resolved: {落地: kept}
+
+- name: 本工具提示里的词名靠引号屏蔽
+  text: |
+    随便写一句。■ 「对齐」（必改） 问题：混用
+  expect: {}
+  decision: Pass
+
+- name: Codex 把提示当正文再扫 → process_stop 放行（上下文里仍有裸词）
+  text: |
+    措辞检查：下面这些词可能让读者看不懂，请逐条判断。
+
+    ■ 「对齐」（必改）
+      - 第 11 行：词条字段对齐现有结构（term / level / why）。
+      问题：文档一致、字段一致、人同步混用
+  process_stop: true
+  expect: {}
+  decision: Pass
+
+- name: 对齐后文已列字段 → 仍送审但看语境（由 AI 判）
+  text: 词条字段对齐现有结构（term / level / why / suggest / 可选 aliases）。
+  expect: {对齐: Review}
+  decision: Review
+
+- name: 冒烟测试是长词放行，不被「烟测」子串命中
+  text: 发布前跑一轮冒烟测试。
+  expect: {冒烟测试: Ignored}
+  decision: Pass
+
+- name: 口语「烟测」仍送审
+  text: 先烟测一下。
+  expect: {烟测: Review}
+
+- name: 面向对象不被「面向」命中
+  text: 这是面向对象编程的写法。
+  expect: {面向对象: Ignored}
+  decision: Pass
+
+- name: 第一期不被「一期」命中
+  text: 第一期只做导入。
+  expect: {第一期: Ignored}
+
+- name: 删掉的常用词不再命中
+  text: 基于上次测试结果，先回滚到上一版，再同步配置并验收；外面套了一层包装脚本。
+  expect: {}
+  decision: Pass
+
+- name: 直译词「基线」送审
+  text: 先核对当前版本的基线。
+  expect: {基线: Review}
+  decision: Review
+
+- name: 外观、淘汰不再当作别名送审
+  text: 按钮外观调整后，淘汰了旧版本。
+  expect: {}
+  decision: Pass
+
+- name: 端到端测试、缓存穿透、行内对齐等长词放行，不被短词误伤
+  text: 补齐端到端测试，给空结果加短期缓存防止缓存穿透，对齐容器与文字行内对齐。
+  expect: {端到端测试: Ignored, 缓存穿透: Ignored, 行内对齐: Ignored}
+  decision: Pass
+
+- name: 需要解释的 MDN 术语在 3 级送审（同时不被短词误伤）
+  text: 配合预取、渐进增强、优雅降级和骨架屏提升感知性能，打包时开启摇树优化，并在跨域请求前处理预检请求。
+  expect: {预取: Review, 渐进增强: Review, 优雅降级: Review, 感知性能: Review, 摇树优化: Review, 预检请求: Review}
+  decision: Review
+
+- name: 管理面、体感、全链路、拉满、收束、产线送审
+  text: 管理面跑通了全链路，但用户体感不明显，宽度横向拉满后按规则收束到产线代码。
+  expect: {控制面: Review, 链路: Review, 体感: Review, 拉满: Review, 收敛: Review, 产线: Review}
+  decision: Review
+
+- name: 语料新增：全绿、实锤等行话送审（1 级）
+  text: 账本 15/15 全绿，终审干净，已打出实锤；词义搬家后还要打回重判。
+  expect: {全绿: Review, 终审干净: Review, 实锤: Review, 词义搬家: Review, 打回重判: Review}
+  decision: Review
+
+- name: 「我认」送审，「我认为」「我认识」放行
+  text: 你指出的问题很关键，我认。我认为这样可以，我认识这位同事。
+  expect: {我认: Review, 我认为: Ignored}
+  decision: Review
+
+- name: 只有「我认为」「我认同」「自我认知」时整体放行
+  text: 我认为这个方案可行，我认同你的判断，这有助于提升自我认知。
+  expect: {我认为: Ignored}
+  decision: Pass
+
+- name: 稳稳地接住、不躲不藏等腔调送审
+  text: 我就在这里，不躲，不藏，稳稳地接住你，不评判。
+  expect: {稳稳地接住: Review, 不躲不藏: Review}
+  decision: Review
+
+- name: 防御性叠甲与套话送审（2 级）
+  text: 这并不意味着已经完成，目前不足以确认；值得注意的是，归根结底要看数据。
+  expect: {并不意味着: Review, 不能宣称: Review, 值得注意的是: Review, 归根结底: Review}
+  decision: Review
+
+- name: 加回的词：跑通、拆解、盘点、严禁送审
+  text: 先盘点现状，拆解成三块，跑通后严禁改动。
+  expect: {盘点: Review, 拆解: Review, 跑通: Review, 严禁: Review}
+  decision: Review
+
+- name: 加回的正当术语在 3 级送审：面包屑、幂等、快照、哈希、死锁
+  text: 页面顶部是面包屑，接口是幂等的，先存快照，校验哈希，排查死锁。
+  expect: {面包屑: Review, 幂等: Review, 快照: Review, 哈希: Review, 死锁: Review}
+  decision: Review
+
+- name: 加回的看语境词：复盘、解法、回写、阻塞
+  text: 先复盘，再讨论工程解法，回写字段时遇到阻塞。
+  expect: {复盘: Review, 工程解法: Review, 回写: Review, 阻塞: Review}
+  decision: Review
+
+- name: 新增英文直译词（1 级）：静默、钉死、实装、两臂、加厚
+  text: 仓库全日静默，先把版本钉死，新功能实装后再两臂并行加厚覆盖。
+  expect: {静默: Review, 钉死: Review, 实装: Review, 两臂: Review, 加厚: Review}
+  decision: Review
+
+- name: 新增英文直译词（2 级）且影子流量仍走长词匹配
+  text: 配置排空后让旧规则退役，通过有界合并处理影子规则与影子流量，操作面和底座先双轨运行一跳，补上大头解码与纸面配置。
+  expect: {排空: Review, 退役: Review, 有界: Review, 影子: Review, 影子流量: Review, 操作面: Review, 底座: Review, 双轨: Review, 一跳: Review, 大头: Review, 纸面配置: Review}
+  decision: Review
+
+- name: 新增电报体与搭配词送审，且普通单字「上/出/钉/种」不误报
+  text: 首跑贴证确认装成，探针默藏并检查听口，必要时滚旧；今天上真机、出包并种 GeoIP，防止假绿。
+  expect: {贴证: Review, 装成: Review, 探针默藏: Review, 听口: Review, 滚旧: Review, 上环境: Review, 出风险: Review, 种数据: Review, 假绿: Review}
+  decision: Review
+
+- name: 普通单字「上/出/钉/种」在日常语句中不误报
+  text: 上午列出三种方案，把钉子装进盒子里。
+  expect: {}
+  decision: Pass
+
+- name: 新增工程口语与行业隐喻送审（2 级）
+  text: 昨日结转项先对数再开闸，机队盖章后入库进主线，补齐可跑形状、串链验收与走真管道，确认绿线落点。
+  expect: {结转: Review, 对数: Review, 门闩: Review, 车队: Review, 盖章: Review, 入库: Review, 进主线: Review, 可跑形状: Review, 串链验收: Review, 走真管道: Review, 绿线: Review, 落点: Review}
+  decision: Review

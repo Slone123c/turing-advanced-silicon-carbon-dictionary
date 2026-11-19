@@ -1,0 +1,12 @@
+{
+  "turing-advanced-silicon-carbon-dictionary": {
+    "enabled": true,
+    "Stop": [
+      {
+        "type": "command",
+        "command": "python3 /path/to/turing-advanced-silicon-carbon-dictionary/scan.py --hook antigravity",
+        "timeout": 10
+      }
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "type": "command",
+        "command": "python3 /path/to/turing-advanced-silicon-carbon-dictionary/scan.py --hook trae",
+        "loop_limit": 2
+      }
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+# English rules — starter sample to show the multi-language format. Needs a native-speaker maintainer.
+# level: 1 prefer rewrite / 2 check context / 3 explain if needed / 0 allow
+lang: en
+rules:
+  1:
+  - term: delve
+    aliases: [delve into, delves]
+    why: Filler verb strongly associated with AI text; adds nothing.
+    suggest: Say what you will actually do — "look at", "explain", "compare".
+  - term: leverage
+    why: Corporate jargon for "use".
+    suggest: use
+  - term: seamless
+    aliases: [seamlessly]
+    why: Empty praise; never says what friction was removed.
+    suggest: Name the step that no longer needs manual work.
+  2:
+  - term: robust
+    why: Vague quality claim.
+    suggest: State what failure it survives (retries, bad input, restarts…).
+    ok_when: The sentence already names the failure it survives.

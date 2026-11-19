@@ -1,0 +1,53 @@
+lang: en
+keep_mark: "[Wording confirmed, keep original]"
+header: "Wording check: the terms below are often vague. Check each one to see if clearer wording helps."
+feedback_prefix: "Wording check:"
+term_open: "\""
+term_close: "\""
+term_sep: ", "
+term_heading: "■ {words} ({level_label})"
+lines_heading: "Hits:"
+line_item: "  - Line {line} ({words}): {context}"
+actions_heading: "Action by level:"
+action_item: "  - {level_label}: {value}"
+fields:
+  why: "  Issue: {value}"
+  ok_when: "  OK when: {value}"
+  bad_when: "  Rewrite when: {value}"
+  suggest: "  Suggest: {value}"
+level_labels:
+  1: Prefer rewrite
+  2: Check context
+  3: Explain if needed
+  0: Allow
+level_actions:
+  1: "Replace with concrete phrasing by default; keep only under principle 1 or 2"
+  2: "Judge using 'OK when' and 'Rewrite when'"
+  3: "OK to use; if readers might not know it, briefly explain on first mention"
+guide: |-
+  These terms are not banned; they are just often vague. For each hit, ask whether concrete wording would make it clearer.
+  Principles:
+  1. Keep if discussing the term in quotes, quoting someone else, or using a proper noun / product name.
+  2. Keep if the user used the term first, or the surrounding context makes its exact meaning obvious.
+  3. Rewrite if several of these terms pile up in one sentence.
+  4. Each term heading shows its level in parentheses; follow the matching entry under 'Action by level'.
+  5. Replace with concrete actions, objects, and outcomes rather than another empty synonym, and do not drop conditions or facts; keep if no better phrasing exists.
+
+  How to respond:
+  - If any part needs rewriting: edit only the flagged spots without altering other sentences, then output the full revised reply without explaining what you changed.
+  - If all occurrences should stay as-is: reply with a single line {keep_mark} and do not repeat the original text.
+confirm:
+  heading: "Confirmation needed (the terms below reached the daily threshold; ask the user whether to add them to their local knowledge base):"
+  item: "- \"{term}\" (hit {count} times today): briefly explain what it means at the end of your reply and ask whether the user understands \"{term}\" and wants to add it to their local knowledge base (so it won't be flagged again); do not assume they do."
+  suggest: "  Suggested explanation: {value}"
+  command: "  Only after the user explicitly confirms, run: `{cmd}`."
+  decline_command: "  If the user declines, run: `{cmd}` (resets the prompt counter without affecting stats and stops nagging)."
+replay_prompt: |-
+  [Conversation]
+  User: {user}
+
+  You (previous reply):
+  {reply}
+
+  [Stop hook feedback — address before finishing]
+  {reason}

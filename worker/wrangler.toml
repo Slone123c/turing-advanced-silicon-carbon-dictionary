@@ -1,0 +1,27 @@
+name = "sic-dict-hot"
+main = "index.js"
+compatibility_date = "2026-01-01"
+
+[[kv_namespaces]]
+binding = "HOT_KV"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+
+# Optional: bind a spare/custom domain on Cloudflare so you can enable WAF Rate Limiting in front of the Worker.
+# routes = [
+#   { pattern = "hot.example.com", custom_domain = true }
+# ]
+
+[triggers]
+crons = ["0 8,20 * * *"]
+
+[vars]
+# Comma-separated allowed Origins for POST /hit (e.g. "https://slone123c.github.io").
+# Leave empty for local development.
+ALLOWED_ORIGINS = ""
+# Secret Gist ID for scheduled 12-hour backups (set GITHUB_TOKEN via `wrangler secret put GITHUB_TOKEN`).
+GIST_ID = ""
+GIST_FILENAME = "sic-dict-hot-backup.json"
+# Optional secrets (set via `npx wrangler secret put <NAME>`):
+# - GITHUB_TOKEN: GitHub PAT with `gist` scope for 12h backups
+# - TURNSTILE_SECRET_KEY: Cloudflare Turnstile secret key to block automated curl/script hits
+# - IP_SALT: random string used to salt hashed IPs in KV rate-limit keys

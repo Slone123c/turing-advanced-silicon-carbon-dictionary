@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "name": "turing-advanced-silicon-carbon-dictionary",
+            "type": "command",
+            "timeout": 10,
+            "command": "python3 /path/to/turing-advanced-silicon-carbon-dictionary/scan.py --hook qwen-code"
+          }
+        ]
+      }
+    ]
+  }
+}

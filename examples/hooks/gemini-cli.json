@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "AfterAgent": [
+      {
+        "hooks": [
+          {
+            "name": "turing-advanced-silicon-carbon-dictionary",
+            "type": "command",
+            "timeout": 10000,
+            "command": "python3 /path/to/turing-advanced-silicon-carbon-dictionary/scan.py --hook gemini-cli"
+          }
+        ]
+      }
+    ]
+  }
+}

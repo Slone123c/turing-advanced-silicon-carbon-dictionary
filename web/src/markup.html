@@ -1,0 +1,230 @@
+<a href="#dict-main" class="skip-link visually-hidden" id="skip-to-main">跳转到词条列表</a>
+
+<nav class="thumbs" id="thumbs-nav" data-side="right" aria-label="按首字母跳转">
+  <div class="thumbs-shell">
+    <div class="thumbs-track" id="thumbs-track"></div>
+    <button type="button" class="thumbs-side-toggle" id="thumbs-side-toggle" aria-label="将字母书签栏移到左侧" title="移到左侧">
+      <svg class="od-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    </button>
+  </div>
+</nav>
+
+<div class="site-header-bar">
+  <header class="site-header page-shell">
+    <a class="brand" id="brand-home-link" href="./" aria-label="返回词典首页">
+      <!--BRAND_MARK-->
+      <span class="brand-wordmark" aria-hidden="true"><span class="brand-wordmark-si"><span class="brand-wordmark-nuc"><span class="brand-wordmark-nuc-inner">14</span></span>Si<span class="brand-wordmark-ext"><span class="brand-wordmark-ext-inner">licon</span></span></span><span class="brand-wordmark-en">–</span><span class="brand-wordmark-c"><span class="brand-wordmark-nuc"><span class="brand-wordmark-nuc-inner">6</span></span>C<span class="brand-wordmark-ext"><span class="brand-wordmark-ext-inner">arbon</span></span></span></span>
+    </a>
+    <div class="header-actions">
+      <button type="button" class="header-search-btn" id="header-search-btn" aria-label="跳转到搜索框">
+        <svg class="od-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <span id="header-search-label">查词</span>
+      </button>
+      <button type="button" class="header-add-btn" id="header-add-btn" aria-label="提交新词">
+        <svg class="od-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 5v14M5 12h14"></path></svg>
+        <span id="header-add-label">提交新词</span>
+      </button>
+      <a class="header-star-btn" id="header-github-star" href="https://github.com/" target="_blank" rel="noopener noreferrer">
+        <svg class="od-icon header-star-icon" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.756 1.975a.75.75 0 0 1-1.088-.79l.719-4.192L.879 6.545a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z" /></svg>
+        <span class="header-star-label" id="header-star-label">Star</span>
+      </a>
+      <a class="header-link" id="header-about-link" href="./intro/">关于</a>
+      <a class="header-link" id="header-github-link" href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="切换深浅色" aria-pressed="false"></button>
+    </div>
+  </header>
+  <div class="header-scroll-progress" id="header-scroll-progress" aria-hidden="true"></div>
+</div>
+
+<div class="mobile-alpha-wrap" id="mobile-alpha-wrap" hidden>
+  <nav class="od-rail mobile-alpha-rail" id="mobile-alpha-rail" aria-label="移动端按首字母跳转"></nav>
+</div>
+
+<div class="page-shell">
+  <section class="hero">
+    <div class="hero-top-row">
+      <div class="lang-switch-cluster">
+        <div class="lang-switch" id="lang-switch" data-active="zh" role="group" aria-label="切换词典语言">
+          <span class="lang-switch-thumb" aria-hidden="true"></span>
+          <button type="button" class="lang-btn" data-lang="zh" aria-pressed="true">中文</button>
+          <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">English</button>
+        </div>
+        <span class="lang-switch-more" id="lang-switch-more">
+          <span class="lang-switch-more-mark" aria-hidden="true">+</span>
+          <span class="lang-switch-more-text" id="lang-switch-more-text">更多</span>
+        </span>
+      </div>
+      <p class="hero-eyebrow" id="hero-eyebrow">150 个词 · 示例 11 条</p>
+    </div>
+    <div class="hero-title-row">
+      <h1 class="hero-title" id="hero-title">图灵高阶硅碳词典</h1>
+    </div>
+    <p class="hero-lede" id="hero-lede">整理 AI 回答中高频出现的令人难以理解的表述，给出修改建议，同时提供编码 Agent 的自动审查 Hook</p>
+    <p class="hero-notice" id="hero-notice" role="note" hidden></p>
+    <div class="hero-links">
+      <button type="button" class="hero-action-pill" id="hook-install-toggle" aria-expanded="false" aria-controls="hook-install-panel">
+        <span class="hero-action-icon" aria-hidden="true">
+          <svg class="od-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="m8 11 4 4 4-4"/><path d="M5 19h14"/></svg>
+        </span>
+        <span class="hero-action-title" id="hook-install-toggle-label">安装 Agent Hook</span>
+        <svg class="od-icon hero-action-chevron" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <a class="hero-replay-link" id="hero-replay-link" href="./replay/result.html">
+        <span class="hero-replay-icon" aria-hidden="true">
+          <svg class="od-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>
+          </svg>
+        </span>
+        <span class="hero-replay-title" id="hero-replay-title">改写结果对比</span>
+        <svg class="od-icon hero-replay-chevron" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </a>
+    </div>
+
+    <section class="hook-install-panel" id="hook-install-panel" hidden aria-labelledby="hook-install-toggle">
+      <div class="hook-install-card">
+        <div class="hook-install-head">
+          <span class="hook-install-meta" id="landing-agents-summary">把这段话发给 Claude Code、Cursor、Codex、Gemini CLI 等编码 Agent，它会自动识别并安装：</span>
+          <span class="copy-wrap">
+            <button type="button" class="copy-button" id="landing-copy-prompt-btn" command="--copy" commandfor="landing-agent-prompt">
+              <svg class="od-icon copy-icon-default" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <svg class="od-icon copy-icon-check" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M20 6 9 17l-5-5"/></svg>
+              <span id="landing-copy-prompt-label">复制提示词</span>
+            </button>
+            <span class="copy-tip" id="landing-copy-tip" role="status"></span>
+          </span>
+        </div>
+        <pre class="hook-install-pre" tabindex="0"><code id="landing-agent-prompt"></code></pre>
+      </div>
+    </section>
+  </section>
+
+  <search class="search-wrap" id="search-section" aria-label="搜索与筛选词条">
+    <div class="search-bar-slot" id="search-bar-slot">
+      <label class="search-bar" id="search-bar" for="search-input">
+        <svg class="od-icon search-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <span class="sr-only" id="search-sr-label">搜索词语</span>
+        <input class="search-input" id="search-input" name="q" type="search" placeholder="搜索词语、拼音、别名或说明" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="search">
+        <button type="button" class="search-clear" id="search-clear" hidden aria-label="清空搜索">
+          <svg class="od-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+          <span id="search-clear-label">清空</span>
+        </button>
+        <span class="search-kbd" id="search-kbd" aria-hidden="true">/</span>
+      </label>
+    </div>
+
+    <div class="hot-terms-row" id="hot-terms-row" aria-label="热词快捷试查">
+      <span class="hot-terms-label" id="hot-terms-label">试查：</span>
+      <div class="od-cluster" id="hot-terms-list"></div>
+    </div>
+
+    <div class="level-toolbar" id="level-guide-box">
+      <div class="level-filter-row">
+        <button type="button" class="filter-pill" id="level-all-btn" aria-pressed="true">
+          <span id="level-all-label">全部</span>
+          <span class="filter-count" id="level-all-count">11</span>
+        </button>
+        <div class="level-badges-group" id="level-filters" role="group" aria-label="按建议级别筛选"></div>
+      </div>
+      <div class="level-toolbar-actions">
+        <button type="button" class="bulk-toggle-btn sort-hot-btn" id="sort-hot-btn" aria-pressed="false">按热度排序</button>
+        <button type="button" class="bulk-toggle-btn" id="toggle-all-btn"></button>
+      </div>
+    </div>
+
+    <div class="search-status" id="search-status" hidden aria-live="polite">
+      <span id="search-status-text"></span>
+      <button type="button" class="search-status-reset" id="search-status-reset">重置筛选</button>
+    </div>
+  </search>
+
+  <main class="dict-main" id="dict-main" tabindex="-1">
+    <div id="dictionary-groups"></div>
+
+    <div class="empty-state" id="empty-state" hidden>
+      <h2 class="empty-title" id="empty-title">没有找到匹配的词条</h2>
+      <p class="empty-desc" id="empty-desc">可以换一个关键词或改写建议试试，或重置当前筛选条件。</p>
+      <div class="empty-actions">
+        <button type="button" class="btn btn-primary" id="empty-add-word">
+          <svg class="od-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 5v14M5 12h14"></path></svg>
+          <span id="empty-add-word-label">提交新词</span>
+        </button>
+        <button type="button" class="btn btn-secondary" id="empty-reset">显示全部词条</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <span id="footer-legend">1 最好修改 · 2 看语境 · 3 补充说明 · 0 放行</span>
+    <a class="footer-about-link" id="footer-about-link" href="./intro/">关于这本词典</a>
+    <span id="footer-meta">词表来自 rules/，提议经维护者审阅后合并 · 11 / 150</span>
+  </footer>
+</div>
+
+<dialog class="modal-dialog" id="suggest-dialog" closedby="any" aria-labelledby="suggest-dialog-title">
+  <form class="modal-card" id="suggest-form" novalidate>
+    <div class="modal-header">
+      <div>
+        <h2 class="modal-title" id="suggest-dialog-title">提一个更好的说法 · ISSUE</h2>
+        <p class="modal-subtitle" id="suggest-dialog-sub"></p>
+      </div>
+      <button type="button" class="modal-close" id="suggest-close" aria-label="关闭弹窗">
+        <svg class="od-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+      </button>
+    </div>
+
+    <div class="form-field">
+      <label class="form-label" for="suggest-text"><span id="suggest-text-label">原因</span><span class="form-required" aria-hidden="true">*</span></label>
+      <textarea class="form-control" id="suggest-text" name="freeform_text" rows="4" minlength="2" required aria-invalid="false" data-error="suggest-text-error"></textarea>
+      <p class="form-error" id="suggest-text-error" hidden></p>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" id="suggest-cancel">取消</button>
+      <button type="submit" class="btn btn-primary" id="suggest-submit">保存并提交 Issue</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog class="modal-dialog" id="add-word-dialog" closedby="any" aria-labelledby="add-word-dialog-title">
+  <form class="modal-card" id="add-word-form" novalidate>
+    <div class="modal-header">
+      <div>
+        <h2 class="modal-title" id="add-word-dialog-title">提交新词 · ISSUE</h2>
+        <p class="modal-subtitle" id="add-word-dialog-sub">补充词典未收录的含糊词，支持本地即时预览并生成 GitHub Issue。</p>
+      </div>
+      <button type="button" class="modal-close" id="add-word-close" aria-label="关闭弹窗">
+        <svg class="od-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+      </button>
+    </div>
+
+    <div class="form-field">
+      <label class="form-label" for="add-word-term"><span id="add-word-term-label">词语</span><span class="form-required" aria-hidden="true">*</span></label>
+      <input class="form-control" id="add-word-term" name="term" type="text" required aria-invalid="false" data-error="add-word-term-error">
+      <p class="form-error" id="add-word-term-error" hidden></p>
+    </div>
+
+    <div class="form-field">
+      <label class="form-label" for="add-word-level" id="add-word-level-label">建议级别</label>
+      <select class="form-control" id="add-word-level" name="level"></select>
+    </div>
+
+    <div class="form-field">
+      <label class="form-label" for="add-word-why"><span id="add-word-why-label">理由</span><span class="form-required" aria-hidden="true">*</span></label>
+      <textarea class="form-control" id="add-word-why" name="why" rows="3" minlength="2" required aria-invalid="false" data-error="add-word-why-error"></textarea>
+      <p class="form-error" id="add-word-why-error" hidden></p>
+    </div>
+
+    <div class="form-field">
+      <label class="form-label" for="add-word-alias" id="add-word-alias-label">别名（可选）</label>
+      <input class="form-control" id="add-word-alias" name="alias" type="text">
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" id="add-word-cancel">取消</button>
+      <button type="submit" class="btn btn-primary" id="add-word-submit">保存并提交 Issue</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
+

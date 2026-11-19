@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "hooks": {
+    "afterAgentResponse": [
+      {
+        "command": "./hooks/turing-advanced-silicon-carbon-dictionary.sh",
+        "timeout": 10
+      }
+    ],
+    "stop": [
+      {
+        "command": "./hooks/turing-advanced-silicon-carbon-dictionary.sh",
+        "timeout": 10,
+        "loop_limit": 2
+      }
+    ]
+  }
+}

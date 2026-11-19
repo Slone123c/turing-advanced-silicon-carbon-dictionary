@@ -1,0 +1,11 @@
+*.bak
+__pycache__/
+.sic-dict/
+.audition/
+web/node_modules/
+web/dist/
+replay/sic-dict/
+replay/audition/
+.tmp/
+.wrangler/
+.dev.vars

@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "turing-advanced-silicon-carbon-dictionary",
+      "description": "检查回复中的硅碳黑话与空话",
+      "trigger": "Stop",
+      "action": {
+        "type": "command",
+        "command": "python3 /path/to/turing-advanced-silicon-carbon-dictionary/scan.py --hook kiro"
+      },
+      "timeout": 10,
+      "enabled": true
+    }
+  ]
+}

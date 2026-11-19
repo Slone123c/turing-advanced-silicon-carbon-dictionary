@@ -1,0 +1,6 @@
+<svg class="brand-mark" viewBox="0 0 40 34" aria-hidden="true" focusable="false">
+  <path class="brand-mark-human" d="M12 2C5.9 2 1 6.1 1 11.5c0 3 1.5 5.5 4 7.3V24l5.4-3.1H12c6.1 0 11-4.1 11-9.4S18.1 2 12 2Z" />
+  <path class="brand-mark-quote" d="M7.5 13v-2.5c0-1.4.7-2.4 2-2.9M13 13v-2.5c0-1.4.7-2.4 2-2.9" />
+  <path class="brand-mark-ai" d="M21 12h13l5 5v10h-5v5l-7-5h-6l-4-4v-7Z" />
+  <path class="brand-mark-code" d="m25 17-3 3 3 3m6-6 3 3-3 3" />
+</svg>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://slone123c.github.io/turing-advanced-silicon-carbon-dictionary/sitemap.xml

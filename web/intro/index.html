@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0e0e0f">
+<script>
+try {
+  var t = localStorage.getItem('la-dictionary-theme');
+  if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
+} catch (_) {}
+</script>
+<title>关于 · 图灵高阶硅碳词典</title>
+<meta name="description" content="AI 的回答里常有读者看不懂的说法。图灵高阶硅碳词典收录这些说法并给出改写建议，配套 Hook 会在编码 Agent 写完回复时自动检查并要求改写。">
+<link rel="canonical" href="https://slone123c.github.io/turing-advanced-silicon-carbon-dictionary/intro/">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Turing Advanced Silicon–Carbon Dictionary">
+<meta property="og:title" content="关于 · 图灵高阶硅碳词典">
+<meta property="og:description" content="收录 AI 回答里读者看不懂的说法并给出改写建议，配套编码 Agent 自动审查 Hook。">
+<meta property="og:url" content="https://slone123c.github.io/turing-advanced-silicon-carbon-dictionary/intro/">
+<meta property="og:image" content="https://slone123c.github.io/turing-advanced-silicon-carbon-dictionary/og-card.svg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap" media="print" onload="this.media='all'" referrerpolicy="no-referrer">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap" referrerpolicy="no-referrer"></noscript>
+</head>
+<body>
+<div class="bar">
+  <header class="shell bar-inner">
+    <a class="brand" href="../" id="brand-link" aria-label="打开词典"><span id="brand-mark" aria-hidden="true"></span><span class="brand-word">Si<span class="brand-dash">–</span>C</span></a>
+    <div class="bar-actions">
+      <div class="lang-switch" id="lang-switch" data-active="zh" role="group" aria-label="切换语言">
+        <button type="button" data-lang="zh" aria-pressed="true">中</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <a class="pill pill-solid" href="../" data-i18n="ctaDict">开始查词</a>
+      <button type="button" class="icon-btn" id="theme-toggle" aria-label="切换深浅色">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16Z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </header>
+</div>
+
+<main class="shell">
+  <section class="hero">
+    <div class="hero-top">
+      <div class="hero-copy">
+        <p class="eyebrow" data-i18n="eyebrow">图灵高阶硅碳词典</p>
+        <h1 class="hero-title" data-i18n-html="heroTitle">匪夷所思的<br>AI 回答</h1>
+        <p class="hero-lede" id="hero-lede"></p>
+        <div class="cta-row">
+          <a class="pill pill-solid pill-lg" href="../" data-i18n="ctaDict">开始查词</a>
+          <a class="pill pill-lg" href="#install" data-i18n="ctaInstall">安装 Agent Hook</a>
+        </div>
+      </div>
+      <img class="hero-art" src="../src/assets/intro-hero.webp" width="640" height="640" alt="一个人站在笔记本电脑前，看着屏幕上的回复挠着头，头上冒出问号">
+    </div>
+
+    <ol class="examples" id="convo"></ol>
+  </section>
+
+  <section class="block" id="how">
+    <h2 class="block-title" data-i18n="howTitle">Hook 怎么工作</h2>
+    <div class="flow" id="flow" data-hook="idle" data-tone="bad">
+      <div class="flow-lane">
+        <div class="flow-node" data-node="agent">
+          <span class="flow-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M12 7V4M9 12h.01M15 12h.01M9.5 16h5"/></svg></span>
+          <span class="flow-name">Agent</span>
+        </div>
+        <div class="flow-node" data-node="hook">
+          <span class="flow-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v6c0 4.2 3 7.4 7 9 4-1.6 7-4.8 7-9V6Z"/></svg></span>
+          <span class="flow-name">Hook</span>
+          <span class="flow-badge" id="flow-badge" aria-live="polite"></span>
+        </div>
+        <div class="flow-node" data-node="you">
+          <span class="flow-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c1.2-3.6 3.8-5.5 7-5.5s5.8 1.9 7 5.5"/></svg></span>
+          <span class="flow-name">你</span>
+        </div>
+        <div class="flow-packet" id="flow-packet" data-at="agent"><span class="flow-packet-card" id="flow-packet-text"></span></div>
+      </div>
+      <ol class="flow-steps" id="flow-steps">
+        <li><button type="button" data-step="0">回复</button></li>
+        <li><button type="button" data-step="1">命中</button></li>
+        <li><button type="button" data-step="2">改写</button></li>
+        <li><button type="button" data-step="3">交付</button></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="block" id="proof" hidden>
+    <h2 class="block-title" data-i18n="proofTitle">测试数据</h2>
+    <div class="stats" id="stats"></div>
+    <a class="text-link" href="../replay/result.html" data-i18n="proofLink">查看全部改写对比 →</a>
+  </section>
+
+  <section class="block" id="install">
+    <h2 class="block-title" data-i18n="installTitle">装上 Hook</h2>
+    <p class="block-lede" data-i18n="installLede">把下面这段话发给你的编码 Agent（Claude Code、Cursor、Codex、Gemini CLI 等），它会自己完成安装。</p>
+    <div class="prompt-card">
+      <div class="prompt-head">
+        <span data-i18n="promptLabel">安装提示词</span>
+        <button type="button" class="pill pill-sm" id="copy-btn" data-i18n="copy">复制</button>
+      </div>
+      <pre class="prompt-pre" tabindex="0"><code id="install-prompt"></code></pre>
+    </div>
+  </section>
+
+  <section class="closing">
+    <h2 class="closing-title" data-i18n="closingTitle">看看收录了哪些词</h2>
+    <a class="pill pill-solid pill-lg" href="../" data-i18n="ctaDict">开始查词</a>
+  </section>
+</main>
+
+<footer class="shell foot">
+  <span data-i18n="footNote">图灵高阶硅碳词典 · 开源项目</span>
+  <a href="https://github.com/Slone123c/turing-advanced-silicon-carbon-dictionary">GitHub</a>
+</footer>
+
+<script type="module" src="../src/intro.js"></script>
+</body>
+</html>

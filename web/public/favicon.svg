@@ -1,0 +1,24 @@
+<svg viewBox="0 0 48 38" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .human { fill: none; stroke: #111111; stroke-linecap: round; stroke-linejoin: round; }
+    .ai { fill: none; stroke: #2f54eb; stroke-linecap: round; stroke-linejoin: round; }
+    .loop { stroke-width: 2.5; }
+    .quote { stroke-width: 2.8; }
+    .solid { fill: #2f54eb; stroke: none; }
+    @media (prefers-color-scheme: dark) {
+      .human { stroke: #efefef; }
+      .ai { stroke: #7aa2ff; }
+      .solid { fill: #7aa2ff; }
+    }
+  </style>
+  <g class="human">
+    <path class="loop" d="M23 12C20 5 12 3 6.5 7S1 19 7 23c4 2.5 9 2 13-1l-3-3" />
+    <path class="loop" d="M17.5 19H23v5.5" />
+    <path class="quote" d="M9 16v-2.3c0-1.3.6-2.2 1.8-2.7M14.5 16v-2.3c0-1.3.6-2.2 1.8-2.7" />
+  </g>
+  <g class="ai">
+    <path class="loop" d="M25 26c3 7 11 9 16.5 5S47 19 41 15c-4-2.5-9-2-13 1l-3 3" />
+    <path class="loop" d="M30.5 19H25v-5.5" />
+    <path class="solid" d="M30 20h4v4h-2v3h-2Zm7 0h4v4h-2v3h-2Z" />
+  </g>
+</svg>
