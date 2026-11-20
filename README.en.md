@@ -21,6 +21,8 @@
   </p>
 </div>
 
+https://github.com/user-attachments/assets/027f3971-02d1-448e-8387-9061501a5605
+
 <p align="center">
   <a href="https://slone123c.github.io/turing-advanced-silicon-carbon-dictionary/intro/">
     <picture>
