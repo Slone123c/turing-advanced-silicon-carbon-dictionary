@@ -36,11 +36,20 @@ def _make(agent: str, event: str):
     def factory(process_stop, *, last_assistant_text=None, **_kw):
         def run(patterns) -> int:
             raw = read_payload()
+            # Cursor 兼容加载 ~/.claude/settings.json 时会以 claude-code 身份二次触发且不带正文；
+            # 跳过这类调用及空正文，避免与 cursor adapter 双记账和争抢 state 文件。
+            if agent == "claude-code" and (
+                "cursor_version" in raw
+                or ("conversation_id" in raw and "last_assistant_message" not in raw and "lastAssistantMessage" not in raw)
+            ):
+                return 0
             req = make_request(raw, agent=agent, event=event,
                                text=pick(raw, "last_assistant_message", "lastAssistantMessage"))
             if not req.text and last_assistant_text:
                 path = pick(raw, "transcript_path", "transcriptPath", "session_file", default="")
                 req.text = last_assistant_text(path) or ""
+            if not req.text.strip():
+                return 0
             result = process_stop(req, patterns)
             if result.decision == "Review" and result.reason:
                 emit({"decision": "block", "reason": result.reason})

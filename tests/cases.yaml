@@ -222,3 +222,8 @@
   text: 昨日结转项先对数再开闸，机队盖章后入库进主线，补齐可跑形状、串链验收与走真管道，确认绿线落点。
   expect: {结转: Review, 对数: Review, 门闩: Review, 车队: Review, 盖章: Review, 入库: Review, 进主线: Review, 可跑形状: Review, 串链验收: Review, 走真管道: Review, 绿线: Review, 落点: Review}
   decision: Review
+
+- name: 「同一期望」走 0 级放行，不被「一期」跨词子串误命中
+  text: 同一源站、同一期望配置只创建一次、只归档一次。
+  expect: {同一期望: Ignored}
+  decision: Pass

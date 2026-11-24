@@ -37,8 +37,8 @@ guide: |-
   - If any part needs rewriting: edit only the flagged spots without altering other sentences, then output the full revised reply without explaining what you changed.
   - If all occurrences should stay as-is: reply with a single line {keep_mark} and do not repeat the original text.
 confirm:
-  heading: "Confirmation needed (the terms below reached the daily threshold; ask the user whether to add them to their local knowledge base):"
-  item: "- \"{term}\" (hit {count} times today): briefly explain what it means at the end of your reply and ask whether the user understands \"{term}\" and wants to add it to their local knowledge base (so it won't be flagged again); do not assume they do."
+  heading: "Confirmation needed (the terms below reached the 7-day threshold; ask the user whether to add them to their local knowledge base):"
+  item: "- \"{term}\" (hit {count} times in the past 7 days): briefly explain what it means at the end of your reply and ask whether the user understands \"{term}\" and wants to add it to their local knowledge base (so it won't be flagged again); do not assume they do."
   suggest: "  Suggested explanation: {value}"
   command: "  Only after the user explicitly confirms, run: `{cmd}`."
   decline_command: "  If the user declines, run: `{cmd}` (resets the prompt counter without affecting stats and stops nagging)."

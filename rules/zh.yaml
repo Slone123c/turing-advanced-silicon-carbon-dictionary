@@ -1103,6 +1103,9 @@ rules:
   - term: 第一期
     why: 已写明期次；防止被「一期」命中
     suggest: ''
+  - term: 同一期望
+    why: 「同一 + 期望」的正常搭配；防止被「一期」跨词子串误命中
+    suggest: ''
   - term: 物化视图
     why: 数据库专有名词
     suggest: ''

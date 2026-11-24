@@ -58,6 +58,11 @@ def factory(process_stop, *, data_dir: Path, **_kw):
                            text=stash.get("text") or raw.get("text") or "",
                            session_keys=("conversation_id", "session_id", "sessionId"))
         req.cwd = req.cwd or stash.get("cwd") or ""
+        # Cursor 的 loop_count 在同一会话的新回合可能未清零；
+        # 仅在显式 stop_hook_active=True 时由 adapter 标为续跑，其余交由 process_stop 按 state 文件判定。
+        req.round_no = 1 if bool(pick(raw, "stop_hook_active", "stopHookActive", default=False)) else 0
+        if not req.text.strip():
+            return 0
 
         result = process_stop(req, patterns)
         if result.decision == "Review" and result.reason:

@@ -184,6 +184,41 @@ class UnderstoodTests(unittest.TestCase):
             self.assertEqual(scan.load_understood_entries(ufile), [])
             self.assertNotIn("补充确认", res.reason)
 
+    def test_recent_window_hits_accumulate_across_days_even_when_archived(self):
+        from datetime import date, timedelta
+
+        patterns = scan.build_patterns(scan.load_rules(scan.RULES_DIR))
+        with tempfile.TemporaryDirectory() as tmp:
+            tdir = Path(tmp)
+            ufile = scan.understood_path(tdir)
+            log_file = tdir / "log.jsonl"
+            today = date.today()
+            for offset in (1, 2, 4, 6):
+                d = (today - timedelta(days=offset)).isoformat()
+                scan.append_log({
+                    "ts": f"{d}T10:00:00", "agent": "test", "session": f"prev-{offset}",
+                    "project": "demo", "round": 0, "decision": "Review", "chars": 10,
+                    "archived": f"{d}T23:59:59",
+                    "hits": [{"term": "摇树优化", "state": "Review", "level": 3}],
+                    "resolved": {}, "text": "摇树优化",
+                }, log_path=log_file)
+            # 超过 7 天窗口的记录不应计入
+            expired = (today - timedelta(days=7)).isoformat()
+            scan.append_log({
+                "ts": f"{expired}T10:00:00", "agent": "test", "session": "expired-7",
+                "project": "demo", "round": 0, "decision": "Review", "chars": 10,
+                "hits": [{"term": "摇树优化", "state": "Review", "level": 3}],
+                "resolved": {}, "text": "摇树优化",
+            }, log_path=log_file)
+
+            res = scan.process_stop(HookRequest(agent="test", session_id="today-5", cwd=str(ROOT),
+                                                text="今天再次开启摇树优化。"), patterns, data_dir=tdir)
+            self.assertEqual(res.decision, "Review")
+            self.assertIn("补充确认", res.reason)
+            self.assertIn("近 7 天第 5 条回复命中", res.reason)
+            entry = {e["term"]: e for e in scan.load_understood_entries(ufile)}["摇树优化"]
+            self.assertEqual(entry["today_hits"], 5)
+
     def test_active_status_is_preserved_and_not_prompted(self):
         patterns = scan.build_patterns(scan.load_rules(scan.RULES_DIR))
         with tempfile.TemporaryDirectory() as tmp:
@@ -290,7 +325,7 @@ class UnderstoodTests(unittest.TestCase):
 
             r10 = stop("d-10", "第 10 次提到摇树优化。")
             self.assertIn("补充确认", r10.reason)
-            self.assertIn("今日第 5 条回复命中", r10.reason)
+            self.assertIn("近 7 天第 5 条回复命中", r10.reason)
             self.assertEqual(scan.compute_stats(log_file)["terms"]["摇树优化"]["Review"], 10)
 
             scan.confirm_understood(["摇树优化"], rules=rules, log_path=log_file, out_path=ufile)

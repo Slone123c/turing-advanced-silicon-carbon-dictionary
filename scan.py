@@ -31,6 +31,7 @@ import re
 import sys
 import time
 from collections import Counter, defaultdict
+from datetime import date, timedelta
 from pathlib import Path
 
 import yaml
@@ -86,13 +87,14 @@ _ZH_LOC = get_locale("zh")
 KEEP_MARK = _ZH_LOC["keep_mark"]
 SNIP = 40          # 命中词前后各记录多少字
 TEXT_CAP = 8000    # 日志里保存的回复原文最多多少字
+UNDERSTOOD_WINDOW_DAYS = 7
 UNDERSTOOD_RECORD_THRESHOLD = 3
 UNDERSTOOD_THRESHOLD = 5
 UNDERSTOOD_LEVELS = {3}
 UNDERSTOOD_HEADER = (
     "# Local personal terminology knowledge base:\n"
-    "# - Level-3 terms hit in >= 3 replies/day are recorded as `status: pending` (still flagged).\n"
-    "# - At >= 5 replies/day, the hook asks whether to add the term to your local KB.\n"
+    "# - Level-3 terms hit in >= 3 replies within 7 days are recorded as `status: pending` (still flagged).\n"
+    "# - At >= 5 replies within 7 days, the hook asks whether to add the term to your local KB.\n"
     "# - Confirmed terms become `status: understood` and pass automatically; delete or set `status: active` to re-enable.\n"
 )
 
@@ -194,11 +196,18 @@ def load_understood(path=None):
     return {e["term"] for e in load_understood_entries(path) if e.get("status", "understood") == "understood"}
 
 
-def today_term_reply_counts(day=None, log_path=None):
-    day = day or time.strftime("%Y-%m-%d")
+def _window_cutoff(day=None, window_days=UNDERSTOOD_WINDOW_DAYS):
+    end = date.fromisoformat(day or time.strftime("%Y-%m-%d"))
+    start = end - timedelta(days=max(1, int(window_days)) - 1)
+    return start.isoformat(), end.isoformat()
+
+
+def today_term_reply_counts(day=None, log_path=None, window_days=UNDERSTOOD_WINDOW_DAYS):
+    start_day, end_day = _window_cutoff(day, window_days)
     counts = Counter()
-    for r in read_log(log_path):
-        if r.get("round") != 0 or not r.get("ts", "").startswith(day):
+    for r in read_log(log_path, include_archived=True):
+        rec_day = (r.get("ts") or "")[:10]
+        if r.get("round") != 0 or not (start_day <= rec_day <= end_day):
             continue
         for t in {h["term"] for h in r.get("hits", []) if h.get("state") == "Review"}:
             counts[t] += 1
@@ -212,9 +221,11 @@ def _write_understood_entries(entries, path=None):
                                                     sort_keys=False, width=200), encoding="utf-8")
 
 
-def _effective_today_hits(raw_count, entry, day):
-    if entry and entry.get("reset_day") == day:
-        return max(0, raw_count - int(entry.get("reset_base_hits", 0)))
+def _effective_today_hits(raw_count, entry, day, window_days=UNDERSTOOD_WINDOW_DAYS):
+    if entry and entry.get("reset_day"):
+        start_day, end_day = _window_cutoff(day, window_days)
+        if start_day <= entry["reset_day"] <= end_day:
+            return max(0, raw_count - int(entry.get("reset_base_hits", 0)))
     return raw_count
 
 
@@ -597,8 +608,10 @@ def last_assistant_text(path):
     return last_jsonl_text(path, _claude_assistant_text)
 
 
-def state_file(session_id, data_dir=None):
-    return Path(data_dir or DATA_DIR) / "state" / f"{re.sub(r'[^A-Za-z0-9_-]', '_', session_id or 'unknown')}.json"
+def state_file(session_id, data_dir=None, agent=None):
+    sid = re.sub(r"[^A-Za-z0-9_-]", "_", session_id or "unknown")
+    prefix = f"{re.sub(r'[^A-Za-z0-9_-]', '_', agent)}_" if agent else ""
+    return Path(data_dir or DATA_DIR) / "state" / f"{prefix}{sid}.json"
 
 
 def append_log(record, log_path=None):
@@ -623,7 +636,7 @@ def process_stop(req, patterns, data_dir=None, lang=None):
     u_path = understood_path(base_dir)
     text = req.text or ""
     sid = req.session_id or ""
-    sf = state_file(sid, base_dir)
+    sf = state_file(sid, base_dir, agent=req.agent)
     round_no = req.round_no or 0
 
     # host 误把本工具的提示当 assistant 正文再扫 → 放行且保留送审状态，等真正的改写稿

@@ -206,6 +206,55 @@ class AdapterTests(unittest.TestCase):
             self.assertEqual(out["decision"], "block")
             self.assertEqual(out["followup_message"], out["reason"])
 
+            # 续跑完成：Confirmed 并清掉 state
+            self.assertEqual(call({"conversation_id": "c-1", "text": "【措辞已确认，保留原文】", "cwd": str(ROOT)}), "")
+            self.assertEqual(call({"conversation_id": "c-1", "hook_event_name": "stop",
+                                   "status": "completed", "loop_count": 1}), "")
+
+            # 新回合即使 Cursor 带上未清零的 loop_count=1，也不应跳过首轮审查
+            self.assertEqual(call({"conversation_id": "c-1", "text": "新回复里再次出现闭环。", "cwd": str(ROOT)}), "")
+            out2 = json.loads(call({"conversation_id": "c-1", "hook_event_name": "stop",
+                                    "status": "completed", "loop_count": 1}))
+            self.assertEqual(out2["decision"], "block")
+            self.assertIn("闭环", out2["reason"])
+
+    def test_claude_code_skips_cursor_dual_trigger_and_empty_text(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tdir = Path(tmp)
+            cursor_runner = adapters.get_adapter("cursor")(
+                lambda req, pats: scan.process_stop(req, pats, data_dir=tdir), data_dir=tdir)
+            cc_runner = adapters.get_adapter("claude-code")(
+                lambda req, pats: scan.process_stop(req, pats, data_dir=tdir),
+                last_assistant_text=scan.last_assistant_text,
+                data_dir=tdir,
+            )
+
+            def call(runner, payload):
+                buf = io.StringIO()
+                with mock.patch.object(sys, "stdin", io.StringIO(json.dumps(payload))), redirect_stdout(buf):
+                    runner(self.patterns)
+                return buf.getvalue().strip()
+
+            # Cursor 触发 Review 并写入 state
+            call(cursor_runner, {"conversation_id": "shared-1", "text": "这里做个兜底。", "cwd": str(ROOT)})
+            out = json.loads(call(cursor_runner, {"conversation_id": "shared-1", "hook_event_name": "stop",
+                                                  "status": "completed", "loop_count": 0}))
+            self.assertEqual(out["decision"], "block")
+
+            # 同会话下 Cursor 兼容触发 claude-code（带 conversation_id / cursor_version 且无正文）应静默跳过
+            self.assertEqual(call(cc_runner, {"conversation_id": "shared-1", "session_id": "shared-1",
+                                              "cursor_version": "1.0.0", "cwd": str(ROOT)}), "")
+
+            # Cursor 真正的第二轮保留原文仍能正确读取 state 并记为 kept（不被 claude-code 抢删）
+            call(cursor_runner, {"conversation_id": "shared-1", "text": "【措辞已确认，保留原文】", "cwd": str(ROOT)})
+            self.assertEqual(call(cursor_runner, {"conversation_id": "shared-1", "hook_event_name": "stop",
+                                                  "status": "completed", "loop_count": 1}), "")
+
+            recs = scan.read_log(tdir / "log.jsonl")
+            self.assertEqual(len(recs), 2)
+            self.assertEqual([r["agent"] for r in recs], ["cursor", "cursor"])
+            self.assertEqual(recs[1]["resolved"], {"兜底": "kept"})
+
     def test_antigravity_reads_cwd_from_workspace_paths(self):
         seen = {}
 
